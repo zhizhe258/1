@@ -58,14 +58,14 @@ In this step, we combine **Gaussian Splatting** for high-quality visual renderin
 - Next, in the **Stage** panel, create an Xform at `/World/Xform`, select it, and add a reference to the `texture_mesh.glb` file using an **absolute file path**. At this point, the scene should contain `/World/gauss` for Gaussian rendering and `/World/Xform` for mesh-based collisions.  
 - These two assets must then be spatially aligned; in most cases, rotating `/World/Xform` by **180 degrees around the Z axis** is sufficient, although some scenes may also require scaling (commonly ×100) or additional translation and rotation adjustments. Make sure that the Gaussian splats and mesh geometry overlap correctly in the viewport.
 
-https://github.com/user-attachments/assets/6823b049-9060-466a-a427-bc05597a2c5c
+https://github.com/user-attachments/assets/9ab50828-8de1-4d55-b243-c320a7c91cac
 
 #### Step 2: Configure Physics and Colliders for the Mesh
 
 - After alignment is complete, configure physics on the collision mesh. Select `/World/Xform` and add physics using the **Rigid Body with Colliders Preset**, then enable **Kinematic** in the Rigid Body settings so the mesh behaves as a static collision object.  
 - Next, select `/World/Xform/decimated_mesh` and, under **Physics → Collider**, set the **Approximation** mode to `meshSimplification`. This setup provides accurate collision behavior while maintaining good simulation performance.
 
-https://github.com/user-attachments/assets/fb51f725-8647-4c6b-90ec-28493108117a
+https://github.com/user-attachments/assets/ab391d89-e228-4476-b55c-cec093ab25f4
 
 #### Step 3: Optimize Visuals and Export the Final USD
 
@@ -73,4 +73,4 @@ https://github.com/user-attachments/assets/fb51f725-8647-4c6b-90ec-28493108117a
 - **Collision visualization** can be enabled when needed for debugging or inspection.  
 - Once both rendering and collision behavior are verified, **save the combined scene as a single USD file** (for example, `scene.usd`). This USD file will serve as the scene entry point and will be referenced directly by LeIsaac in subsequent task and environment configurations.
 
-https://github.com/user-attachments/assets/983759a2-7cd9-441a-9789-347517f57680
+https://github.com/user-attachments/assets/59b924ad-2d7c-48b4-b4d4-875af7268438
