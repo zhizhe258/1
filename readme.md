@@ -1,50 +1,3 @@
-非常抱歉，之前的回复可能在格式连贯性上出现了疏忽。现在为您提供一份**完全对齐 “Add a Custom Task” 风格**、且内容**绝对完整**的 Markdown 源代码。
-
-这份代码涵盖了从 Marble 生成到 LeIsaac 代码配置的所有步骤，去除了冗余，统一了语气。
-
-```markdown
-# 🚀 Add a Custom Scene in LeIsaac
-
-This tutorial walks you through how to add a **custom high-fidelity scene** in **LeIsaac**, enabling you to build and evaluate a variety of tasks based on your own environments.
-
----
-
-## 1. Create Assets in Marble
-
-The first step is to generate the digital twin of your environment using the **Marble** platform. 
-
-Every task environment in LeIsaac starts with these high-fidelity assets.
-
-1.  Navigate to the **[Marble Platform](https://marble.worldlabs.ai/)**.
-2.  Follow the **[Marble Documentation](https://docs.worldlabs.ai/)** to create your custom world model.
-3.  Once satisfied, download the following assets:
-    * **Splats file** (`.ply`): Used for high-quality Gaussian visual rendering.
-    * **High-quality mesh** (`.glb`): Recommended for accurate physical collisions.
-
-> [!TIP]
-> **For best results:** Use high-resolution images or videos for generation. It is highly recommended to refine and finalize the **panorama** before generating the full 3D world to ensure consistent lighting.
-
----
-
-## 2. Convert Splats to USDZ
-
-Since Isaac Sim renders Gaussian Splats via USD, you must convert the raw `.ply` data into a USD-compatible format using **NVIDIA 3DGrut**.
-
-### Install 3DGrut
-Clone the repository and follow the official installation instructions:
-**[GitHub: nv-tlabs/3dgrut](https://github.com/nv-tlabs/3dgrut)**
-
-> [!IMPORTANT]
-> **Note for RTX 50-Series GPUs:** If you encounter installation or kernel issues on the latest hardware, refer to this community fix: [Issue #167](https://github.com/nv-tlabs/3dgrut/issues/167).
-
-### Run Conversion
-Execute the following command in your terminal to generate the USDZ file:
-
-```bash
-python -m threedgrut.export.scripts.ply_to_usd path/to/your/splats.ply \
-    --output_file path/to/output.usdz
-
-```
 
 ---
 
@@ -86,48 +39,13 @@ https://www.google.com/search?q=https://github.com/user-attachments/assets/59b92
 
 ## 4. Add Asset Configuration
 
-Once the scene file is ready, add the asset configuration in code. The root of the LeIsaac source is `source/leisaac/leisaac`.
+Here is the process of adding the assets must be used within the task. Here again use the previous scene we had. create an Xform and add the robot arm as the reference. Then drag the robot to the ideal place you want. Here record the tanformation info, here the tranlation and ori, rememeber here use the quaternion WXYZ format.
+Then run the following script with the previuos ideal palce info.
+Here would generate a new scene,usd with the assets in it. Then please replace the asset path in  task here. RUN the teleoperation script to check the success.
 
-In `source/leisaac/leisaac`, create `assets/scenes/custom_scene.py` with:
+Here please make sure use the right assetbase path.
 
-```python
-from pathlib import Path
+For cloth and toyroom task. we offer another choice including the table replacement. Here please create an Xform and add the relavent table usd according to the  task type. here remove the physics property of the original table and add the physics of collider to the new created Xform. drag the table to the ideal place, for exact tranform, ypu can use click the play button to let the table firmly contact with the ground. then record the tranformation info as before. Then run the following code.
 
-import isaaclab.sim as sim_utils
-from isaaclab.assets import AssetBaseCfg
-from leisaac.utils.constant import ASSETS_ROOT
+And for dual arm tasks, here the process is the same, but the robot you drag make sure it is the left arm, we would use it as a reference.
 
-"""Configuration for the Custom Scene"""
-SCENES_ROOT = Path(ASSETS_ROOT) / "scenes"
-
-# Point to the USD entry file you just exported
-CUSTOM_SCENE_USD_PATH = str(SCENES_ROOT / "custom_scene" / "scene.usd")
-
-CUSTOM_SCENE_CFG = AssetBaseCfg(
-    spawn=sim_utils.UsdFileCfg(
-        usd_path=CUSTOM_SCENE_USD_PATH,
-    )
-)
-
-```
-
-Here are some notes on the code:
-
-* `CUSTOM_SCENE_USD_PATH` points to the USD entry file for the scene. You can rename the file or variables as needed, just update the references accordingly.
-* `CUSTOM_SCENE_CFG` uses `UsdFileCfg` to define how the asset should be spawned. This configuration will be imported by your task environment configuration.
-
----
-
-## ✅ Checklist
-
-* [ ] Gaussian scene is visible at `/World/gauss`.
-* [ ] Mesh is set to `Kinematic` and correctly aligned.
-* [ ] Collision approximation is set to `meshSimplification`.
-* [ ] `scene.usd` is saved and referenced correctly in `custom_scene.py`.
-
-**Next Step:** With your high-fidelity scene prepared, you can now proceed to **[Add a Custom Task](https://www.google.com/search?q=./add_custom_task.md)** to define the robot's behavior!
-
-```
-
-
-```
