@@ -100,19 +100,35 @@ https://github.com/user-attachments/assets/0b8ded40-aa41-4e32-9a1d-360a4241ea91
 
 
 
-### 1.4 Add Robot Asset to the Scene
+## Step 2: Scene Composition for Tasks
 
-Some manipulation tasks(folding clothes, clean toys) in this project are **executed on a table surface**.  
-Therefore, the scene composition process separates the **robot**, **task assets**, and  the **table** to give you more options when building custom scenes.
+Some manipulation tasks in LeIsaac (e.g., **cloth folding**, **toy cleaning**) are executed **on a table surface**.
+To support a wide range of custom scenes, LeIsaac separates:
 
-Start by loading your background scene(the USD exported in step3) and creating an `Xform` prim.  
-Add the **SO101 Follower** USD as a reference under this `Xform`, then drag the robot to the desired pose.
+* **Background scene** (environment geometry)
+* **Robot**
+* **Task assets** (objects and optional table)
 
-Record the final transform of the robot:
-- **Translation**: **(x, y, z)**
-- **Orientation**: quaternion **(w, x, y, z)**
+This design makes task execution more robust across scanned or reconstructed environments.
 
-Then run the following script to compose the scene:
+---
+
+### 2.1 Add Robot Asset to the Scene
+
+#### Step 1: Place the Robot
+
+1. Open the background USD exported in **Step 1.3**.
+2. Create a new `Xform` prim to serve as the robot container.
+3. Add the **SO101 Follower** USD as a **reference** under this `Xform`.
+4. Drag the robot to the desired pose in the scene.
+
+Record the robot transform:
+
+* **Translation**: **(x, y, z)**
+* **Orientation**: quaternion **(w, x, y, z)**
+
+#### Step 2: Compose the Scene
+To compose the scene, please run the follwing script:
 
 ```bash
 python scripts/tutorials/marble_compose.py \
@@ -122,68 +138,49 @@ python scripts/tutorials/marble_compose.py \
   --assets-base /path/to/assets \
   --target-pos X Y Z \
   --target-quat W X Y Z
-````
+```
 
 <details>
 <summary><strong>Parameter descriptions for marble_compose.py</strong></summary>
 
-* `--task`: Task type to configure.
-  Supported values: `toys`, `orange`, `cloth`, `cube`.
-
-* `--background`: Path to the background scene USD
-  (the USD exported in step3).
-
-* `--output`: Output path of the composed USD scene.
-
-* `--assets-base`: Base directory containing task-related asset USD files
-  (e.g., objects to grasp, props, table assets).
-
-* `--target-pos`: Target robot position `(x, y, z)`.
-
-* `--target-quat`: Target robot orientation quaternion `(w, x, y, z)`.
-
-* `--include-table`: Include a task-specific **table asset** in the composed scene.
-  Useful when the background scene does not provide a stable or well-aligned table
+* `--task`: Task type (`toys`, `orange`, `cloth`, `cube`).
+* `--background`: Background scene USD (from Step 1.3).
+* `--output`: Output composed USD path.
+* `--assets-base`: Base directory for task-related asset USDs.
+* `--target-pos`: Robot position `(x, y, z)`.
+* `--target-quat`: Robot orientation quaternion `(w, x, y, z)`.
+* `--include-table`: Include a task-specific table asset
   (see [Table Replacement](#table-replacement)).
-
-* `--dual-arm`: Enable dual-arm configuration.
-  This option switches the robot setup from **single-arm** to **dual-arm** mode
+* `--dual-arm`: Enable dual-arm configuration
   (see [Dual-Arm Configuration](#dual-arm-configuration)).
 
 </details>
 
-> 💡 **Why is there a table option?**
-> Tasks are designed to run on a table. If your background scene does not contain
-> a suitable table (e.g., uneven ground plane or incorrect height), enabling
-> `--include-table` allows the system to insert a known, well-tested table asset
-> to ensure task success.
+> 💡 **Why include a table option?**
+> Custom scenes may not contain a reliable or well-aligned table.
+> Enabling `--include-table` inserts a known, well-tested table asset to ensure stable task execution.
 
 ---
 
-#### Table Replacement
+### 2.2 Table Replacement
 
 Applicable to **cloth** and **toyroom** tasks.
 
-By default, task assets (objects to manipulate) are placed assuming a stable surface exists in the scene. However, some custom scenes may only provide
-a flat plane or an unstable surface. In such cases, you can **explicitly replace
-the table** with a task-specific one. Here the table would be used as a reference instead of the robot.
-
-This option migrates the **table asset**into your scene.
+Use this option if your background scene does not provide a stable table surface.
 
 Steps:
 
-1. Add a new `Xform` prim for the table.
+1. Create a new `Xform` prim for the table.
 2. Reference the task-specific table USD.
-3. Disable physics properties of the table USD under your created Xform.
-4. Add a **Collider** and required physics to the Xform.
-5. Move the table to the desired pose and press **Play** once to let it settle under gravity.
-   This ensures stable contact with the ground.
+3. Disable physics of the loaded table USD.
+4. apply **Rigid Body with Colliders Preset** to the`Xform`.
+5. Move the table into place and press **Play** once to let it settle under gravity.
 6. Record the table transform:
 
    * **Translation**: `(x, y, z)`
    * **Orientation**: quaternion **(w, x, y, z)**
 
-Then run the script with `--include-table` enabled:
+To compose the scene, please run the follwing script:
 
 ```bash
 python scripts/tutorials/marble_compose.py \
@@ -198,18 +195,17 @@ python scripts/tutorials/marble_compose.py \
 
 ---
 
-#### Dual-Arm Configuration
+### 2.3 Dual-Arm Configuration
 
-By default, the setup assumes a **single-arm** SO101 robot.
-If your task requires **two arms**, you can enable dual-arm mode.
+By default, tasks use a **single-arm** SO101 robot.
 
-The overall workflow (scene loading, transform recording, and composition) remains
-the same as the single-arm setup, with one reference constraint:
+For dual-arm tasks, the workflow remains the same with one key assumption:
 
-> [!IMPORTANT]
 > **Left-arm reference**
->When configuring a dual-arm task, you only need to place a single-arm SO101 robot.
->This robot is treated as the left arm, and its transform is used as the reference for building the dual-arm setup.
+> You still place **one single-arm SO101 robot** in the scene.
+> This robot is interpreted as the **left arm**, and its transform is used as the global reference when composing the dual-arm setup.
+
+Enable dual-arm mode, please run the follwing script::
 
 ```bash
 python scripts/tutorials/marble_compose.py \
@@ -222,3 +218,66 @@ python scripts/tutorials/marble_compose.py \
   --include-table \
   --dual-arm
 ```
+
+## Step 3: Verify the Scene
+
+After composing the scene USD, you need to verify if it can be loaded and operated correctly.
+
+
+---
+
+### 3.1 Replace the default scene with custom scene
+
+All scene configurations are defined under:
+
+```
+leisaac/source/leisaac/leisaac/assets/scenes
+```
+
+Take toyroom as an example:
+
+```python
+from pathlib import Path
+
+import isaaclab.sim as sim_utils
+from isaaclab.assets import AssetBaseCfg
+from leisaac.utils.constant import ASSETS_ROOT
+
+"""Configuration for the Toy Room Scene"""
+SCENES_ROOT = Path(ASSETS_ROOT) / "scenes"
+
+LIGHTWHEEL_TOYROOM_USD_PATH = str(SCENES_ROOT / "lightwheel_toyroom" / "scene.usd")
+
+LIGHTWHEEL_TOYROOM_CFG = AssetBaseCfg(
+    spawn=sim_utils.UsdFileCfg(
+        usd_path=LIGHTWHEEL_TOYROOM_USD_PATH,
+    )
+)
+
+````
+
+> 🔧 **What you need to change**
+>
+> * Replace `"LIGHTWHEEL_TOYROOM_USD_PATH"` with your composed USD path.
+
+### 3.2 Verify via Teleoperation (`teleop_se3_agent.py`)
+
+After updating the task configuration, use the teleoperation script to **verify that the scene is correctly composed**.
+
+Run the teleoperation script:
+
+```bash
+python scripts/environments/teleoperation/teleop_se3_agent.py \
+    --task=LeIsaac-SO101-CleanToyTable-v0 \
+    --teleop_device=so101leader \
+    --port=/dev/ttyACM0 \
+    --num_envs=1 \
+    --device=cuda \
+    --enable_cameras \
+    --record \
+    --dataset_file=./datasets/dataset.hdf5
+```
+
+
+
+
