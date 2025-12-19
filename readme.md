@@ -192,8 +192,8 @@ The table USD files are located under the corresponding task directories in
 * **toys**: `KidRoom_Table01`
 * **cloth**: `Table038`
 
-Steps:
 
+#### 2.2.1: Place the Table
 1. Create a new `Xform` prim for the table.
 2. Add the Table USD as a **reference** under this `Xform`.
 3. Disable physics of the loaded table USD.
@@ -216,7 +216,7 @@ https://github.com/user-attachments/assets/bad40949-788b-4c43-98aa-2b80aee122d5
 
 
 
-
+#### 2.2.2: Compose the Scene
 To compose the scene, please run the follwing script:
 
 ```bash
