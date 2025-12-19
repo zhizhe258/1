@@ -37,15 +37,101 @@ https://www.google.com/search?q=https://github.com/user-attachments/assets/59b92
 
 ---
 
-## 4. Add Asset Configuration
+### 4.1 Add Robot Asset to the Scene
 
-Here is the process of adding the assets must be used within the task. Here again use the previous scene we had. create an Xform and add the robot arm as the reference. Then drag the robot to the ideal place you want. Here record the tanformation info, here the tranlation and ori, rememeber here use the quaternion WXYZ format.
-Then run the following script with the previuos ideal palce info.
-Here would generate a new scene,usd with the assets in it. Then please replace the asset path in  task here. RUN the teleoperation script to check the success.
+Load the scene and create an `Xform` prim.  
+Add the SO101 Follower USD as a reference under this `Xform`, then drag the robot to the desired pose.
 
-Here please make sure use the right assetbase path.
+Record the final transform:
+- Translation `(x, y, z)`
+- Orientation: quaternion **(w, x, y, z)**
 
-For cloth and toyroom task. we offer another choice including the table replacement. Here please create an Xform and add the relavent table usd according to the  task type. here remove the physics property of the original table and add the physics of collider to the new created Xform. drag the table to the ideal place, for exact tranform, ypu can use click the play button to let the table firmly contact with the ground. then record the tranformation info as before. Then run the following code.
+Then run the following script:
 
-And for dual arm tasks, here the process is the same, but the robot you drag make sure it is the left arm, we would use it as a reference.
+```bash
+python scripts/tutorials/marble_compose.py \
+  --task your_task \
+  --background path/of/your/scene.usd \
+  --output path/of/your/output.usd \
+  --assets-base /path/to/assets \
+  --target-pos X Y Z \
+  --target-quat W X Y Z
+````
+
+<details>
+<summary><strong>Parameter descriptions for marble_compose.py</strong></summary>
+
+* `--task`: Task type. Supported values: `toys`, `orange`, `cloth`, `cube`.
+
+* `--background`: Path to the background scene USD.
+
+* `--output`: Output path of the composed USD scene.
+
+* `--assets-base`: Base directory of asset USD files.
+
+* `--target-pos`: Target robot position `(x, y, z)`.
+
+* `--target-quat`: Target robot orientation quaternion `(w, x, y, z)`.
+
+* `--include-table`: Include a task-specific table in the composed scene.
+
+* `--dual-arm`: Enable dual-arm configuration.
+  Only supported for `toys` and `cloth` tasks; the **left arm** is used as the reference.
+
+</details>
+
+
+
+### 4.2 Table Replacement for Cloth and Toyroom Tasks (Optional)
+
+For **cloth** and **toyroom** tasks, an alternative configuration is provided that replaces the default table.
+
+1. **Create a new `Xform`**
+   - Add a new `Xform` prim for the table.
+
+2. **Add the task-specific table**
+   - Reference the appropriate table USD based on the task type:
+     - `cloth`
+     - `toyroom`
+
+3. **Remove original table physics**
+   - Disable or remove the physics properties of the original table in the scene.
+
+4. **Add physics to the new table**
+   - Add a **collider** and necessary physics properties to the newly created table `Xform`.
+
+5. **Adjust table placement**
+   - Drag the table to the desired position.
+   - For precise placement:
+     - Click the **Play** button to let the table settle and firmly contact the ground.
+
+6. **Record the transformation**
+   - Record the table’s:
+     - Translation `(x, y, z)`
+     - Orientation (Quaternion **WXYZ**)
+
+7. **Generate the updated scene**
+   - Run the provided script using the recorded table transformation.
+   - A new USD scene with the replaced table will be generated.
+
+---
+
+### 4.3 Dual-Arm Task Configuration
+
+For **dual-arm tasks**, the workflow remains largely the same with one important constraint:
+
+- When adding the robot:
+  - **Always drag and place the left arm**
+  - The left arm is used as the **reference arm** for the task setup
+
+All other steps (creating `Xform`, recording transforms, generating the scene, and updating asset paths) follow the same procedure as described above.
+
+---
+
+### Notes & Best Practices
+
+- Always verify that the **asset base path** is correctly set before running any script.
+- Double-check quaternion order: **WXYZ**, not XYZW.
+- Use teleoperation scripts as the final validation step before running task logic.
+- Keep a record of all transformation parameters for reproducibility.
 
