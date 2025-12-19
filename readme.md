@@ -103,17 +103,16 @@ https://github.com/user-attachments/assets/0b8ded40-aa41-4e32-9a1d-360a4241ea91
 
 
 
-
 ## Step 2: Scene Composition for Tasks
 
 Some manipulation tasks in LeIsaac (e.g., **cloth folding**, **toy cleaning**) are executed **on a table surface**.
 To support a wide range of custom scenes, LeIsaac separates:
 
-* **Background scene** (environment geometry)
+* **Background scene**
 * **Robot**
 * **Task assets** (objects and optional table)
 
-This design makes task execution more robust across scanned or reconstructed environments.
+This design makes task execution more robust across different environments.
 
 ---
 
@@ -121,10 +120,12 @@ This design makes task execution more robust across scanned or reconstructed env
 
 #### Step 1: Place the Robot
 
-1. Open the background USD exported in **Step 1.3**.
-2. Create a new `Xform` prim to serve as the robot container.
+1. Run isaacsim and load the background USD exported in **Step 1.3**.
+2. Create a new `Xform`.
 3. Add the **SO101 Follower** USD as a **reference** under this `Xform`.
 4. Drag the robot to the desired pose in the scene.
+
+
 
 Record the robot transform:
 
@@ -138,7 +139,10 @@ https://github.com/user-attachments/assets/9fb82505-ef36-4d86-a913-919b1866ed83
 
 
 #### Step 2: Compose the Scene
-To compose the scene, please run the follwing script:
+To compose the scene, use the recorded **robot transform** as the target pose
+by passing it to `--target-pos` and `--target-quat`.
+
+Run the following script:
 
 ```bash
 python scripts/tutorials/marble_compose.py \
@@ -167,8 +171,8 @@ python scripts/tutorials/marble_compose.py \
 </details>
 
 > 💡 **Why include a table option?**
-> Custom scenes may not contain a reliable or well-aligned table.
-> Enabling `--include-table` inserts a known, well-tested table asset to ensure stable task execution.
+> Custom scenes may not have a reliable table.
+> Enabling `--include-table` inserts a well-tested table asset to ensure stable task execution.
 
 ---
 
@@ -177,11 +181,12 @@ python scripts/tutorials/marble_compose.py \
 Applicable to **cloth** and **toyroom** tasks.
 
 Use this option if your background scene does not provide a stable table surface.
+The table USD file can be found under the corresponding task directory in the `assets/scenes` folder.
 
 Steps:
 
 1. Create a new `Xform` prim for the table.
-2. Reference the task-specific table USD.
+2. Add the Table USD as a **reference** under this `Xform`.
 3. Disable physics of the loaded table USD.
 4. apply **Rigid Body with Colliders Preset** to the`Xform`.
 5. Move the table into place and press **Play** once to let it settle under gravity.
@@ -216,15 +221,15 @@ python scripts/tutorials/marble_compose.py \
 
 ### 2.3 Dual-Arm Configuration
 
-By default, tasks use a **single-arm** SO101 robot.
+By default, tasks use a **single-arm SO101 Follower** as reference.
 
 For dual-arm tasks, the workflow remains the same with one key assumption:
 
 > **Left-arm reference**
-> You still place **one single-arm SO101 robot** in the scene.
-> This robot is interpreted as the **left arm**, and its transform is used as the global reference when composing the dual-arm setup.
+> You still use **one single-arm SO101 Follower** to locate desired pose.
+> This robot is considered as the **left arm** in the dual-arm setup
 
-Enable dual-arm mode, please run the follwing script::
+To compose the scene, please run the follwing script:
 
 ```bash
 python scripts/tutorials/marble_compose.py \
@@ -275,7 +280,7 @@ LIGHTWHEEL_TOYROOM_CFG = AssetBaseCfg(
 
 ````
 
-> 🔧 **What you need to change**
+> **What you need to change**
 >
 > * Replace `"LIGHTWHEEL_TOYROOM_USD_PATH"` with your composed USD path.
 
@@ -304,5 +309,3 @@ python scripts/environments/teleoperation/teleop_se3_agent.py \
 
 
 https://github.com/user-attachments/assets/3a4a9fa9-f755-43c4-afbd-7502cae7f1d9
-
-
