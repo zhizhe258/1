@@ -76,13 +76,15 @@ python -m threedgrut.export.scripts.ply_to_usd path/to/your/splats.ply \
 
 ### 1.3 Integrate Gaussian Rendering and Mesh Collisions in Isaac Sim
 
-In this step, we combine **Gaussian Splatting** for high-quality visual rendering with **mesh geometry** for accurate physical collisions. The result is a single, complete USD scene that can be directly used for simulation and interaction in LeIsaac.
+In this step, we combine **Gaussian Splatting** for high-quality visual rendering with **mesh geometry** for accurate physical collisions.The result is a single, complete USD scene **as the background scene** for the next step.
 
 #### Step 1: Load and Align the Gaussian Scene and Collision Mesh
 
 - Begin by double-clicking the generated `.usdz` file to extract its contents. Locate `default.usda` in the extracted folder and drag it into the **Isaac Sim GUI viewport** to load the Gaussian splatting scene used for rendering.  
 - Next, in the **Stage** panel, create an Xform at `/World/Xform`, select it, and add a reference to the `texture_mesh.glb` file using an **absolute file path**. At this point, the scene should contain `/World/gauss` for Gaussian rendering and `/World/Xform` for mesh-based collisions.  
-- Before adjusting the mesh, first ensure that `/World/gauss` is **aligned with the world coordinate system** (i.e., its local axes and orientation are consistent with `/World`). Then **align `/World/Xform` to match the Gaussian scene**. In most cases, rotating `/World/Xform` by **180 degrees around the Z axis** is sufficient, although some scenes may also require scaling (commonly ×100) or additional translation and rotation adjustments. In this example, `/World/gauss` is first **rotated 180 degrees around the X axis**, followed by rotating `/World/Xform` **90 degrees around the X axis** and then **180 degrees around the Z axis**. **Make sure that the Gaussian splats and mesh geometry overlap correctly in the viewport.**
+- Before adjusting the mesh, first ensure that `/World/gauss` is **aligned with the world coordinate system**.Then **align `/World/Xform` to match the Gaussian scene**.Always ensure that the Gaussian splats and mesh geometry overlap correctly in the viewport. 
+   * In most cases, rotating `/World/Xform` by **180 degrees around the Z axis** is sufficient. Depending on the source data, you may also need to apply scaling (commonly ×100) or additional translation and rotation adjustments.     
+   * In this example, `/World/gauss` is first **rotated 180 degrees around the X axis**, and `/World/Xform` is rotated **90 degrees around the X axis** followed by **180 degrees around the Z axis** to achieve proper alignment.
 
 https://github.com/user-attachments/assets/e610ee7c-9bf5-4bf8-84fd-e42510012371
 
@@ -97,10 +99,9 @@ https://github.com/user-attachments/assets/a84133a2-63dd-4182-bc73-e7f3e17e0f0f
 
 - For improved visual quality, you may optionally **hide the mesh geometry and keep only the Gaussian splats visible**, while still preserving the underlying collision volumes.  
 - **Collision visualization** can be enabled when needed for debugging or inspection.  
-- Once both rendering and collision behavior are verified, **save the combined scene as a single USD file** (for example, `scene.usd`). This USD file will serve as the scene entry point and will be referenced directly by LeIsaac in subsequent task and environment configurations.
+- Once both rendering and collision behavior are verified, **save the combined scene as a single USD file** (for example, `scene.usd`).This USD will be used as the **background scene** in the next step.
 
 https://github.com/user-attachments/assets/0b8ded40-aa41-4e32-9a1d-360a4241ea91
-
 
 
 ## Step 2: Scene Composition for Tasks
