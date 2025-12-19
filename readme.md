@@ -204,14 +204,12 @@ After composing the scene USD, you need to verify if it can be loaded and operat
 
 ---
 
-### 3.1 Add Asset Configuration in Code
+### 3.1 Replace the default scene with custom scene
 
-All scene asset configurations are defined under:
+All scene configurations are defined under:
 
 ```
-
 leisaac/source/leisaac/leisaac/assets/scenes
-
 ```
 
 Take toyroom as exmple:
@@ -240,7 +238,22 @@ LIGHTWHEEL_TOYROOM_CFG = AssetBaseCfg(
 >
 > * Replace `"LIGHTWHEEL_TOYROOM_USD_PATH"` with your composed USD path.
 
-### 3.2 Verify via teleop_se3_agent.py 
+### 3.2 Verify via Teleoperation (`teleop_se3_agent.py`)
+
+After updating the task configuration, use the teleoperation script to **verify that the scene is correctly composed**.
+
+Run the teleoperation script:
+
+```bash
+python scripts/environments/teleoperation/teleop_se3_agent.py \
+    --task=LeIsaac-SO101-CleanToyTable-v0 \
+    --teleop_device=so101leader \
+    --port=/dev/ttyACM0 \
+    --num_envs=1 \
+    --device=cuda \
+    --enable_cameras \
+    --record \
+    --dataset_file=./datasets/dataset.hdf5
 
 
 
