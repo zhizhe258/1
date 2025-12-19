@@ -212,7 +212,7 @@ All scene configurations are defined under:
 leisaac/source/leisaac/leisaac/assets/scenes
 ```
 
-Take toyroom as exmple:
+Take toyroom as an example:
 
 ```python
 from pathlib import Path
@@ -254,7 +254,7 @@ python scripts/environments/teleoperation/teleop_se3_agent.py \
     --enable_cameras \
     --record \
     --dataset_file=./datasets/dataset.hdf5
-
+```
 
 
 
