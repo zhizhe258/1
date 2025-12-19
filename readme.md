@@ -158,9 +158,9 @@ python scripts/tutorials/marble_compose.py \
 * `--target-pos`: Robot position `(x, y, z)`.
 * `--target-quat`: Robot orientation quaternion `(w, x, y, z)`.
 * `--include-table`: Include a task-specific table asset
-  (see [Table Replacement](#table-replacement)).
+  (see [Table Replacement](#22-table-replacement)).
 * `--dual-arm`: Enable dual-arm configuration
-  (see [Dual-Arm Configuration](#dual-arm-configuration)).
+  (see [Dual-Arm Configuration](#23-dual-arm-configuration)).
 
 </details>
 
@@ -190,7 +190,10 @@ Steps:
   
 
 
-https://github.com/user-attachments/assets/56c705a6-6ecf-4e40-851e-024dade9f918
+
+https://github.com/user-attachments/assets/86ca6e7b-20dd-4445-889e-f57d8f35511c
+
+
 
 
 
@@ -292,7 +295,12 @@ python scripts/environments/teleoperation/teleop_se3_agent.py \
     --dataset_file=./datasets/dataset.hdf5
 ```
 
+
 [notable_record.webm](https://github.com/user-attachments/assets/b64f6e5b-c97f-45bf-be9d-308af2d4adee)
 
+
+
+
+https://github.com/user-attachments/assets/3a4a9fa9-f755-43c4-afbd-7502cae7f1d9
 
 
