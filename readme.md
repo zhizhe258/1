@@ -317,7 +317,7 @@ python scripts/environments/teleoperation/teleop_se3_agent.py \
     <td width="50%" align="center">
       <div>
         <video
-          src="[https://github.com/user-attachments/assets/3cb52d1e-827d-4047-b010-e347bea0ad41](https://github.com/user-attachments/assets/3a4a9fa9-f755-43c4-afbd-7502cae7f1d9)"
+          src="https://github.com/user-attachments/assets/3cb52d1e-827d-4047-b010-e347bea0ad41](https://github.com/user-attachments/assets/3a4a9fa9-f755-43c4-afbd-7502cae7f1d9"
           controls
         ></video>
       </div>
